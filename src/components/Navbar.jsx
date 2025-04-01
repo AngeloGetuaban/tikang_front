@@ -33,7 +33,7 @@ export default function NavBar() {
   return (
     <>
       {/* Top Navigation */}
-      <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md">
+      <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-[#D4EDDA] shadow-md">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <img src={logo} alt="Tikang Logo" className="h-10 w-auto object-contain" />
@@ -89,7 +89,7 @@ export default function NavBar() {
 
         {/* Desktop Nav Links (≥1024px) */}
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
-          <Link to="#" className="hover:text-green-600">Rent a Place</Link>
+          <Link to="/lessor" className="hover:text-green-600">List your Property</Link>
           <Link to="#" className="hover:text-green-600">Favorites</Link>
 
           <div className="relative group">
@@ -102,7 +102,7 @@ export default function NavBar() {
           </div>
 
           <div className="relative group">
-            <Link to="#" className="hover:text-green-600 text-xl">
+            <Link to="/login" className="hover:text-green-600 text-xl">
               <FaUserCircle />
             </Link>
             <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">

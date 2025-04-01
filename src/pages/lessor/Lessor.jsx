@@ -1,5 +1,7 @@
 import React from 'react';
 import './Lessor.css';
+import Footer from '../../components/Footer';
+import { Link } from 'react-router-dom';
 
 function Lessor() {
   return (
@@ -12,9 +14,11 @@ function Lessor() {
             alt="Tikang Logo"
             className="h-10 w-auto bg-white p-1 rounded"
           />
+        <Link to="/lessor-login">
           <button className="text-sm text-blue-600 border border-blue-600 px-4 py-1.5 rounded-full hover:bg-blue-50">
             Sign in
           </button>
+        </Link>
         </div>
       </header>
 
@@ -130,55 +134,7 @@ function Lessor() {
           <img src="/assets/contact-bubble.png" alt="Contact illustration" className="h-24" />
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-100 text-sm px-6 py-10">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-          <div>
-            <h4 className="font-semibold mb-2">Help</h4>
-            <ul className="space-y-1">
-              <li>Help center</li>
-              <li>FAQs</li>
-              <li>Privacy policy</li>
-              <li>Terms of use</li>
-              <li>Manage cookie settings</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Company</h4>
-            <ul className="space-y-1">
-              <li>About us</li>
-              <li>Careers</li>
-              <li>Press</li>
-              <li>Blog</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Destinations</h4>
-            <ul className="space-y-1">
-              <li>Countries/Territories</li>
-              <li>Cities</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Partner with us</h4>
-            <ul className="space-y-1">
-              <li>YCS partner portal</li>
-              <li>Advertise on Tikang</li>
-              <li>Affiliates</li>
-              <li>Connectivity partners</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Get the app</h4>
-            <ul className="space-y-1">
-              <li>iOS app</li>
-              <li>Android app</li>
-            </ul>
-          </div>
-        </div>
-        <p className="text-center text-xs mt-10 text-gray-500">© 2025 Tikang. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
