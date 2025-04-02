@@ -5,7 +5,9 @@ import Lessor from './pages/lessor/Lessor';
 import UserLogin from './pages/logins/UserLogin';
 import LessorLogin from './pages/logins/LessorLogin';
 import TopCitySearch from './pages/TopCitySearch';
-import SearchResults from './pages/SearchResults';
+import SearchResults from './pages/search-results/SearchResults';
+import PlaceDetails from './pages/PlaceDetails';
+import BookForm from './pages/BookForm';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/lessor-login" element={<LessorLogin />} />
         <Route path="/top-city-search" element={<TopCitySearch />} />
         <Route path="/search" element={<SearchResults />} />
+        <Route path="/:placeName" element={<PlaceDetails />} />
+        <Route path="/book" element={<BookForm />} />
       </Routes>
     </Router>
   );
