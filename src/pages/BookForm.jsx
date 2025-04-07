@@ -30,7 +30,7 @@ const BookForm = () => {
         <div className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-400 text-white text-xs">2</div>
         <span>Payment information</span>
         </div>
-        <div className="w-6 h-px bg-gray-300" />
+        <div className="w-6 h-px bg-gray-300" />  
 
         {/* Step 3 */}
         <div className="flex items-center gap-1 text-gray-500">

@@ -10,7 +10,7 @@ const slides = [
   },
   {
     image: 'image_2.webp',
-    text: 'Become a Lessor',
+    text: 'Become an Owner',
     button: 'Rent Your Own Place',
   },
   {

@@ -89,7 +89,7 @@ export default function NavBar() {
 
         {/* Desktop Nav Links (≥1024px) */}
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
-          <Link to="/lessor" className="hover:text-green-600">List your Property</Link>
+          <Link to="/owner" className="hover:text-green-600">List your Property</Link>
           <Link to="#" className="hover:text-green-600">Favorites</Link>
 
           <div className="relative group">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from '../../components/Navbar';
 
-export default function LessorLogin() {
+export default function OwnerLogin() {
   const [isSignup, setIsSignup] = useState(false);
 
   return (
@@ -28,7 +28,7 @@ export default function LessorLogin() {
         {/* Left - Logo and Slogan */}
         <div className="hidden md:flex flex-col items-center justify-center bg-[#71a3d9] text-white p-10 w-1/2">
         <img src="/assets/logo.png" alt="Tikang Logo" className="w-40 mb-2" />
-        <h2 className="text-xl font-bold mb-1 text-center">Be a lessor and feature your place</h2>
+        <h2 className="text-xl font-bold mb-1 text-center">Be a Owner and feature your place</h2>
         <p className="text-sm text-center">
             Your trusted rental platform for local and long stays in the Philippines.
         </p>

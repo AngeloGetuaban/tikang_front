@@ -1,9 +1,9 @@
 import React from 'react';
-import './Lessor.css';
+import './Owner.css';
 import Footer from '../../components/Footer';
 import { Link } from 'react-router-dom';
 
-function Lessor() {
+function Owner() {
   return (
     <div className="text-gray-800">
       {/* Header */}
@@ -14,7 +14,7 @@ function Lessor() {
             alt="Tikang Logo"
             className="h-10 w-auto bg-white p-1 rounded"
           />
-        <Link to="/lessor-login">
+        <Link to="/owner-login">
           <button className="text-sm text-blue-600 border border-blue-600 px-4 py-1.5 rounded-full hover:bg-blue-50">
             Sign in
           </button>
@@ -25,7 +25,7 @@ function Lessor() {
       {/* HERO with background */}
       <section
         className="relative h-[90vh] bg-cover bg-center bg-no-repeat flex flex-col"
-        style={{ backgroundImage: "url('/assets/lessor-signin-bg.gif')" }}
+        style={{ backgroundImage: "url('/assets/owner-signin-bg.gif')" }}
       >
         {/* Overlay and content */}
         <div className="absolute inset-0 bg-black/40" />
@@ -139,4 +139,4 @@ function Lessor() {
   );
 }
 
-export default Lessor;
+export default Owner;
