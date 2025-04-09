@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from '../../components/Navbar';
 import WarningPopup from '../../components/WarningPopup';
-
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 const API_BASE = process.env.REACT_APP_API_URL_GUEST;
 
 export default function UserLogin() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -50,16 +53,16 @@ export default function UserLogin() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      
+
       let data;
       const isJson = res.headers.get('content-type')?.includes('application/json');
-      
+
       if (isJson) {
         data = await res.json();
       } else {
         throw new Error('Invalid response from server. Please try again.');
       }
-      
+
       if (!res.ok) {
         if (res.status === 400) {
           throw new Error(data?.message || 'Missing required fields');
@@ -71,6 +74,8 @@ export default function UserLogin() {
       }
 
       console.log('Success:', data);
+      login(data.token);
+      setTimeout(() => navigate('/'), 0); // redirect to home
       // TODO: Store token and redirect
     } catch (err) {
       setError(err.message);
@@ -78,11 +83,12 @@ export default function UserLogin() {
       setLoading(false);
     }
   };
-  {error && <WarningPopup message={error} onClose={() => setError('')} />}
 
   return (
     <>
       <NavBar />
+      {error && <WarningPopup message={error} onClose={() => setError('')} />}
+
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
         <div className="bg-white shadow-lg rounded-xl flex w-full max-w-5xl overflow-hidden">
           {/* Left - Logo and Slogan */}
@@ -144,8 +150,6 @@ export default function UserLogin() {
                   />
                 </>
               )}
-
-              {error && <p className="text-red-500 text-sm">{error}</p>}
 
               <button
                 type="submit"

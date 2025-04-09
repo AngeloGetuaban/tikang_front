@@ -12,8 +12,10 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import logo from '../assets/logo.png';
 import { format } from 'date-fns';
+import { useAuth } from '../context/AuthContext';
 
 export default function NavBar() {
+  const { user, logout } = useAuth();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,7 +31,7 @@ export default function NavBar() {
     startDate && endDate
       ? `${format(startDate, 'MMM d')} – ${format(endDate, 'MMM d')}`
       : 'Anytime';
-
+      
   return (
     <>
       {/* Top Navigation */}
@@ -37,7 +39,6 @@ export default function NavBar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <img src={logo} alt="Tikang Logo" className="h-10 w-auto object-contain" />
-          <span className="text-lg font-bold text-gray-800"></span>
         </div>
 
         {/* Search Bar (Desktop Only ≥640px) */}
@@ -68,30 +69,22 @@ export default function NavBar() {
           </div>
         </div>
 
-        {/* Mobile Buttons (Only <640px) */}
+        {/* Mobile Buttons */}
         <div className="sm:hidden flex items-center gap-4 ml-auto">
-        {/* Search Icon */}
-        <button
-            className="text-2xl text-gray-700"
-            onClick={() => setSearchPopupOpen(true)}
-        >
+          <button className="text-2xl text-gray-700" onClick={() => setSearchPopupOpen(true)}>
             <FaSearch />
-        </button>
-
-        {/* Hamburger Icon */}
-        <button
-            className="text-2xl text-gray-700"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
+          </button>
+          <button className="text-2xl text-gray-700" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             <FaBars />
-        </button>
+          </button>
         </div>
 
-        {/* Desktop Nav Links (≥1024px) */}
+        {/* Desktop Nav Links */}
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
           <Link to="/owner" className="hover:text-green-600">List your Property</Link>
           <Link to="#" className="hover:text-green-600">Favorites</Link>
 
+          {/* Cart Hover */}
           <div className="relative group">
             <Link to="#" className="hover:text-green-600 text-xl">
               <FaShoppingCart />
@@ -101,13 +94,37 @@ export default function NavBar() {
             </div>
           </div>
 
+          {/* Profile / User Dropdown */}
           <div className="relative group">
-            <Link to="/login" className="hover:text-green-600 text-xl">
-              <FaUserCircle />
-            </Link>
-            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
-              Profile
-            </div>
+            {user ? (
+              <>
+                <button className="hover:text-green-600 font-semibold text-sm">
+                  Welcome, {user?.full_name?.split(' ')[0] || 'User'}
+                </button>
+                <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded shadow-md w-48 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
+                  <Link to="/account" className="block px-4 py-2 hover:bg-gray-100 text-sm">My Account</Link>
+                  <Link to="/bookings" className="block px-4 py-2 hover:bg-gray-100 text-sm">Bookings</Link>
+                  <Link to="/messages" className="block px-4 py-2 hover:bg-gray-100 text-sm">Messages</Link>
+                  <Link to="/wallet" className="block px-4 py-2 hover:bg-gray-100 text-sm">TikangCash</Link>
+                  <Link to="/reviews" className="block px-4 py-2 hover:bg-gray-100 text-sm">Reviews</Link>
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 text-sm"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="hover:text-green-600 text-xl">
+                  <FaUserCircle />
+                </Link>
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                  Profile
+                </div>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -131,31 +148,24 @@ export default function NavBar() {
           <Link to="#" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
             <FaShoppingCart /> Cart
           </Link>
-          <Link to="#" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+          <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
             <FaUserCircle /> Profile
           </Link>
         </div>
       </div>
 
-      {/* Mobile Search Popup Overlay */}
+      {/* Mobile Search Popup */}
       {searchPopupOpen && (
         <div className="fixed inset-0 bg-white z-50 flex flex-col p-6">
           <div className="flex justify-between items-center mb-4">
             <span className="text-xl font-bold">Search</span>
-            <FaTimes
-              className="text-2xl cursor-pointer"
-              onClick={() => setSearchPopupOpen(false)}
-            />
+            <FaTimes className="text-2xl cursor-pointer" onClick={() => setSearchPopupOpen(false)} />
           </div>
-
-          {/* Search Field */}
           <input
             type="text"
             placeholder="Search for a place"
             className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm"
           />
-
-          {/* Calendar Picker */}
           <div className="flex items-center gap-2 mb-4">
             <FaCalendarAlt className="text-gray-500" />
             <DatePicker
@@ -169,8 +179,6 @@ export default function NavBar() {
               dateFormat="MMM d"
             />
           </div>
-
-          {/* Search Button */}
           <button
             onClick={() => setSearchPopupOpen(false)}
             className="bg-blue-500 text-white py-2 rounded-md text-sm font-semibold"
@@ -179,6 +187,6 @@ export default function NavBar() {
           </button>
         </div>
       )}
-      </>
-    );
-  }
+    </>
+  );
+}
