@@ -12,7 +12,7 @@ export default function AccountInformation() {
         <h2 className="text-xl font-bold text-blue-600 mb-4">Account</h2>
         <nav className="flex flex-col gap-2 text-sm">
           <NavLink
-            to=""
+            to="information"
             end
             className={({ isActive }) =>
               `px-4 py-2 rounded transition ${

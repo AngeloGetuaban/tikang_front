@@ -6,11 +6,17 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Validate token on app load
   useEffect(() => {
     const validateToken = async () => {
       const token = localStorage.getItem('tikangToken');
-      if (!token) return;
+      const isOnAuthPage = ['/login', '/register', '/forgot-password'].includes(window.location.pathname);
+
+      if (!token) {
+        if (!isOnAuthPage) {
+          window.location.href = '/login'; // Redirect only if not already on /login
+        }
+        return;
+      }
 
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL_GUEST}/me`, {
@@ -24,11 +30,15 @@ export const AuthProvider = ({ children }) => {
         }
 
         const data = await res.json();
-        setUser(data.user); // trusted user from backend
+        setUser(data.user);
       } catch (err) {
         console.error('Auto-login failed:', err);
         localStorage.removeItem('tikangToken');
         setUser(null);
+
+        if (!isOnAuthPage) {
+          window.location.href = '/login'; // Redirect only if not already on /login
+        }
       }
     };
 
@@ -38,10 +48,9 @@ export const AuthProvider = ({ children }) => {
   const login = (token) => {
     try {
       const decoded = jwtDecode(token);
-
       if (decoded.full_name && decoded.email) {
         localStorage.setItem('tikangToken', token);
-        setUser(decoded); // You can fetch `/me` again here if you want latest profile
+        setUser(decoded);
       } else {
         throw new Error('Token missing required fields');
       }
@@ -67,6 +76,7 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.removeItem('tikangToken');
     setUser(null);
+    window.location.href = '/login'; // Redirect after logout
   };
 
   return (
@@ -75,4 +85,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 export const useAuth = () => useContext(AuthContext);

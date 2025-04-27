@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import logo from '../assets/logo.png';
-import { format } from 'date-fns';
 import { useAuth } from '../context/AuthContext';
 
 export default function NavBar() {
@@ -27,11 +26,6 @@ export default function NavBar() {
     setEndDate(end);
   };
 
-  const displayDate =
-    startDate && endDate
-      ? `${format(startDate, 'MMM d')} – ${format(endDate, 'MMM d')}`
-      : 'Anytime';
-      
   return (
     <>
       {/* Top Navigation */}
@@ -102,11 +96,11 @@ export default function NavBar() {
                   Welcome, {user?.full_name?.split(' ')[0] || 'User'}
                 </button>
                 <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded shadow-md w-48 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
-                  <Link to="/account" className="block px-4 py-2 hover:bg-gray-100 text-sm">My Account</Link>
-                  <Link to="/bookings" className="block px-4 py-2 hover:bg-gray-100 text-sm">Bookings</Link>
-                  <Link to="/messages" className="block px-4 py-2 hover:bg-gray-100 text-sm">Messages</Link>
-                  <Link to="/wallet" className="block px-4 py-2 hover:bg-gray-100 text-sm">TikangCash</Link>
-                  <Link to="/reviews" className="block px-4 py-2 hover:bg-gray-100 text-sm">Reviews</Link>
+                  <Link to="/account/information" className="block px-4 py-2 hover:bg-gray-100 text-sm">My Account</Link>
+                  <Link to="/account/bookings" className="block px-4 py-2 hover:bg-gray-100 text-sm">Bookings</Link>
+                  <Link to="/account/messages" className="block px-4 py-2 hover:bg-gray-100 text-sm">Messages</Link>
+                  <Link to="/account/tikangcash" className="block px-4 py-2 hover:bg-gray-100 text-sm">TikangCash</Link>
+                  <Link to="/account/reviews" className="block px-4 py-2 hover:bg-gray-100 text-sm">Reviews</Link>
                   <button
                     onClick={logout}
                     className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 text-sm"
@@ -143,14 +137,26 @@ export default function NavBar() {
           />
         </div>
         <div className="flex flex-col p-4 text-gray-700 gap-4 text-sm font-medium">
-          <Link to="#" onClick={() => setMobileMenuOpen(false)}>Rent a Place</Link>
+          <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+          <Link to="/owner" onClick={() => setMobileMenuOpen(false)}>List Your Property</Link>
           <Link to="#" onClick={() => setMobileMenuOpen(false)}>Favorites</Link>
           <Link to="#" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
             <FaShoppingCart /> Cart
           </Link>
-          <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
-            <FaUserCircle /> Profile
-          </Link>
+          {user ? (
+            <>
+              <Link to="/account/information" onClick={() => setMobileMenuOpen(false)}>My Account</Link>
+              <Link to="/account/bookings" onClick={() => setMobileMenuOpen(false)}>Bookings</Link>
+              <Link to="/account/messages" onClick={() => setMobileMenuOpen(false)}>Messages</Link>
+              <Link to="/account/tikangcash" onClick={() => setMobileMenuOpen(false)}>TikangCash</Link>
+              <Link to="/account/reviews" onClick={() => setMobileMenuOpen(false)}>Reviews</Link>
+              <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="text-left text-red-600">Logout</button>
+            </>
+          ) : (
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+              <FaUserCircle /> Login
+            </Link>
+          )}
         </div>
       </div>
 
