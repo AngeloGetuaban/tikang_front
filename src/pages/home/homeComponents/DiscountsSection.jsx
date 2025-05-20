@@ -1,15 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import hotelImage from '../../../assets/hotel_default.webp';
 
 const DiscountsSection = () => {
   const discountRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
+  const [activeDiscounts, setActiveDiscounts] = useState([]);
 
   const updateArrowVisibility = () => {
     const el = discountRef.current;
     if (!el) return;
-
     setShowLeftArrow(el.scrollLeft > 0);
     setShowRightArrow(el.scrollLeft + el.offsetWidth < el.scrollWidth);
   };
@@ -28,18 +29,60 @@ const DiscountsSection = () => {
     };
   }, []);
 
-  const offers = [
-    { image: '/assets/image_1.webp', title: '30% Off Manila Hotels', valid: 'Valid until Apr 30' },
-    { image: '/assets/image_2.webp', title: '20% Off Cebu Studios', valid: 'Valid until May 15' },
-    { image: '/assets/image_3.webp', title: 'Rent 5 Days, Get 2 Free', valid: 'Valid until May 10' },
-    { image: '/assets/image_4.webp', title: 'Home Rentals Starting ₱999', valid: 'Valid until Apr 25' },
-    { image: '/assets/image_5.webp', title: 'Boracay Villas at 40% Off', valid: 'Valid until May 5' },
-    { image: '/assets/image_1.webp', title: 'Tagaytay Getaways Deal', valid: 'Valid until Apr 28' },
-    { image: '/assets/image_2.webp', title: 'Iloilo Condo Sale', valid: 'Valid until May 20' },
-    { image: '/assets/image_3.webp', title: '3 Nights for Price of 2', valid: 'Valid until May 30' },
-    { image: '/assets/image_4.webp', title: 'Early Bird Discounts', valid: 'Valid until Apr 27' },
-    { image: '/assets/image_5.webp', title: '10% Off for New Users', valid: 'Valid until May 12' },
-  ];
+  useEffect(() => {
+    const fetchDiscountsAndProperties = async () => {
+      try {
+        const [discountRes, propertyRes] = await Promise.all([
+          fetch(process.env.REACT_APP_API_URL_DISCOUNTS),
+          fetch(process.env.REACT_APP_API_URL_PROPERTIES),
+        ]);
+        const [discounts, properties] = await Promise.all([
+          discountRes.json(),
+          propertyRes.json(),
+        ]);
+
+        const now = new Date();
+
+        const propertyMap = new Map();
+        for (const property of properties) {
+          propertyMap.set(property.property_id, property);
+        }
+
+        const validDiscounts = discounts
+          .filter(discount => new Date(discount.valid_until) >= now)
+          .sort((a, b) => new Date(a.valid_until) - new Date(b.valid_until))
+          .map(discount => {
+            const property = propertyMap.get(discount.property_id);
+            if (
+              !property ||
+              !property.thumbnail_url ||
+              property.thumbnail_url.includes('placekitten') ||
+              property.thumbnail_url.includes('placeimg')
+            ) {
+              return null;
+            }
+
+            return {
+              id: discount.discount_id,
+              image: property.thumbnail_url,
+              title: discount.description,
+              city: `${property.title} - ${property.city}`,
+              valid: `Valid until ${new Date(discount.valid_until).toLocaleDateString('en-PH', {
+                month: 'short',
+                day: 'numeric',
+              })}`,
+            };
+          })
+          .filter(Boolean);
+
+        setActiveDiscounts(validDiscounts);
+      } catch (error) {
+        console.error('Failed to load discounts or properties:', error);
+      }
+    };
+
+    fetchDiscountsAndProperties();
+  }, []);
 
   return (
     <div className="mt-20 px-6">
@@ -50,9 +93,7 @@ const DiscountsSection = () => {
       <div className="relative group max-w-screen-xl mx-auto">
         {showLeftArrow && (
           <button
-            onClick={() =>
-              discountRef.current.scrollBy({ left: -300, behavior: 'smooth' })
-            }
+            onClick={() => discountRef.current.scrollBy({ left: -300, behavior: 'smooth' })}
             className="group-hover:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2"
           >
             <FaChevronLeft className="text-gray-700 w-5 h-5" />
@@ -64,7 +105,7 @@ const DiscountsSection = () => {
           className="flex overflow-x-auto gap-4 scroll-smooth no-scrollbar pb-2 px-2"
           style={{ scrollSnapType: 'x mandatory' }}
         >
-          {offers.map((offer, index) => (
+          {activeDiscounts.map((offer, index) => (
             <div
               key={index}
               className="w-[20%] min-w-[200px] flex-shrink-0 bg-white rounded-lg shadow hover:shadow-md cursor-pointer transition duration-200 snap-start"
@@ -73,9 +114,14 @@ const DiscountsSection = () => {
                 src={offer.image}
                 alt={offer.title}
                 className="w-full h-32 object-cover rounded-t-lg"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = hotelImage;
+                }}
               />
               <div className="p-3 text-center">
                 <h3 className="font-semibold text-gray-800 text-sm">{offer.title}</h3>
+                <p className="text-xs text-gray-500">{offer.city}</p>
                 <p className="text-xs text-gray-500 mt-1">{offer.valid}</p>
               </div>
             </div>
@@ -84,15 +130,19 @@ const DiscountsSection = () => {
 
         {showRightArrow && (
           <button
-            onClick={() =>
-              discountRef.current.scrollBy({ left: 300, behavior: 'smooth' })
-            }
+            onClick={() => discountRef.current.scrollBy({ left: 300, behavior: 'smooth' })}
             className="group-hover:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2"
           >
             <FaChevronRight className="text-gray-700 w-5 h-5" />
           </button>
         )}
       </div>
+
+      {activeDiscounts.length === 0 && (
+        <div className="text-center text-gray-500 py-10">
+          No active discounts available at the moment.
+        </div>
+      )}
     </div>
   );
 };

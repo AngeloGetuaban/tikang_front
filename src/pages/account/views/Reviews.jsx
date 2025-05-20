@@ -150,8 +150,7 @@ export default function Reviews() {
               backgroundPosition: 'center',
             }}
           >
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0" />
-            <div className="relative z-10 p-6 md:p-8 text-white space-y-6">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
               <h2 className="text-2xl font-bold">{selectedReview.property_name}</h2>
 
               <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-white/90">

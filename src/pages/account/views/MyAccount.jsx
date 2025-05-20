@@ -283,12 +283,11 @@ export default function MyAccount() {
   if (loading || !user) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto px-4 py-10">
       {warning && (
         <WarningPopup message={warning} type={warningType} onClose={() => setWarning('')} />
       )}
-
-      <h1 className="text-2xl font-semibold text-gray-800">User details</h1>
+    <h1 className="text-2xl font-bold text-gray-800 mb-6">My Account</h1>
 
       {/* Name Card */}
       <div className={`rounded-lg shadow ${editingName ? 'bg-white p-6' : 'bg-gradient-to-r from-blue-400 to-blue-200 p-5 text-white'} transition-all`}>

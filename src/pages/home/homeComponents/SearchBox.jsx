@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const SearchBox = () => {
+  const navigate = useNavigate();
+
   const [stayType, setStayType] = useState("overnight");
   const [checkIn, setCheckIn] = useState(new Date());
   const [checkOut, setCheckOut] = useState(addDays(new Date(), 1));
@@ -15,10 +18,26 @@ const SearchBox = () => {
   const [activeTab, setActiveTab] = useState("calendar");
   const [stayLength, setStayLength] = useState("1 week");
   const [selectedMonths, setSelectedMonths] = useState([]);
+  const [destination, setDestination] = useState("");
+
+  const handleSearch = () => {
+    navigate('/search', {
+      state: {
+        stayType,
+        checkIn,
+        checkOut,
+        adults: adultCount,
+        children: childCount,
+        rooms: roomCount,
+        stayLength,
+        selectedMonths,
+        destination,
+      }
+    });
+  };
 
   return (
     <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md mt-6 px-6 py-6 relative z-10">
-      {/* Tabs */}
       <div className="flex gap-4 mb-4">
         <button
           onClick={() => setStayType("overnight")}
@@ -42,7 +61,6 @@ const SearchBox = () => {
         </button>
       </div>
 
-      {/* Day Use Info */}
       {stayType === "dayuse" && (
         <div className="text-sm text-pink-600 mb-4 flex items-start gap-2">
           <span className="text-lg">🏨</span>
@@ -53,19 +71,18 @@ const SearchBox = () => {
         </div>
       )}
 
-      {/* Destination */}
       <div className="flex items-center border border-gray-300 rounded-lg px-4 py-3 mb-4 bg-white">
         <span className="text-gray-400 mr-3 text-lg">🔍</span>
         <input
           type="text"
+          value={destination}
+          onChange={(e) => setDestination(e.target.value)}
           placeholder="Enter a destination or property"
           className="w-full outline-none text-sm bg-transparent placeholder-gray-400"
         />
       </div>
 
-      {/* Dates + Guests */}
       <div className="flex flex-wrap md:flex-nowrap gap-4 mb-4 relative">
-        {/* Check-in */}
         <div
           onClick={() => setIsCalendarOpen(!isCalendarOpen)}
           className="flex-1 border border-gray-300 rounded-lg px-4 py-3 bg-white cursor-pointer"
@@ -78,7 +95,6 @@ const SearchBox = () => {
           </div>
         </div>
 
-        {/* Check-out only for overnight */}
         {stayType === "overnight" && (
           <div
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
@@ -91,52 +107,28 @@ const SearchBox = () => {
           </div>
         )}
 
-        {/* Guests */}
         <div
           onClick={() => setGuestDropdownOpen(!guestDropdownOpen)}
           className="flex-1 border border-gray-300 rounded-lg px-4 py-3 bg-white flex items-center justify-between relative cursor-pointer"
         >
           <div className="flex items-center gap-2 text-sm">
             <span className="text-xl">👥</span>
-            <span className="text-gray-700 font-medium">
-              {adultCount} adult{adultCount > 1 ? "s" : ""}
-            </span>
-            <span className="text-gray-500">
-              {roomCount} room{roomCount > 1 ? "s" : ""}
-            </span>
+            <span className="text-gray-700 font-medium">{adultCount} adult{adultCount > 1 ? "s" : ""}</span>
+            <span className="text-gray-500">{roomCount} room{roomCount > 1 ? "s" : ""}</span>
           </div>
           <span className="text-gray-400 text-sm">▼</span>
 
           {guestDropdownOpen && (
             <div className="absolute top-[110%] right-0 w-72 bg-white rounded-xl shadow-xl p-4 z-50 text-sm">
               {[
-                {
-                  label: "Room",
-                  count: roomCount,
-                  set: setRoomCount,
-                  min: 1,
-                },
-                {
-                  label: "Adults",
-                  sub: "Ages 18 or above",
-                  count: adultCount,
-                  set: setAdultCount,
-                  min: 1,
-                },
-                {
-                  label: "Children",
-                  sub: "Ages 0–17",
-                  count: childCount,
-                  set: setChildCount,
-                  min: 0,
-                },
+                { label: "Room", count: roomCount, set: setRoomCount, min: 1 },
+                { label: "Adults", sub: "Ages 18 or above", count: adultCount, set: setAdultCount, min: 1 },
+                { label: "Children", sub: "Ages 0–17", count: childCount, set: setChildCount, min: 0 },
               ].map((item, idx) => (
                 <div key={idx} className="flex justify-between items-center py-2">
                   <div>
                     <div className="font-medium text-gray-800">{item.label}</div>
-                    {item.sub && (
-                      <div className="text-xs text-gray-500">{item.sub}</div>
-                    )}
+                    {item.sub && <div className="text-xs text-gray-500">{item.sub}</div>}
                   </div>
                   <div className="flex items-center gap-3">
                     <button
@@ -165,34 +157,23 @@ const SearchBox = () => {
           )}
         </div>
 
-        {/* Calendar Popup */}
         {isCalendarOpen && (
           <div className="absolute top-[110%] left-0 bg-white rounded-xl shadow-xl p-6 z-50 w-full md:w-[650px]">
-            {/* Tabs */}
             <div className="flex gap-6 text-sm font-medium text-gray-600 border-b w-full pb-2 mb-4">
               <button
                 onClick={() => setActiveTab("calendar")}
-                className={`pb-1 ${
-                  activeTab === "calendar"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : ""
-                }`}
+                className={`pb-1 ${activeTab === "calendar" ? "text-blue-600 border-b-2 border-blue-600" : ""}`}
               >
                 Calendar
               </button>
               <button
                 onClick={() => setActiveTab("flexible")}
-                className={`pb-1 ${
-                  activeTab === "flexible"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : ""
-                }`}
+                className={`pb-1 ${activeTab === "flexible" ? "text-blue-600 border-b-2 border-blue-600" : ""}`}
               >
                 I’m flexible
               </button>
             </div>
 
-            {/* Calendar or Flexible View */}
             {activeTab === "calendar" ? (
               <DatePicker
                 selected={checkIn}
@@ -272,7 +253,10 @@ const SearchBox = () => {
                   >
                     Clear
                   </button>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-lg">
+                  <button
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2 rounded-lg"
+                    onClick={() => setIsCalendarOpen(false)}
+                  >
                     Select
                   </button>
                 </div>
@@ -284,7 +268,10 @@ const SearchBox = () => {
 
       {/* Search Button */}
       <div className="text-center">
-        <button className="bg-[#3A78F2] hover:bg-[#3167d3] text-white font-semibold text-lg px-10 py-3 rounded-xl shadow-md transition">
+        <button
+          onClick={handleSearch}
+          className="bg-[#3A78F2] hover:bg-[#3167d3] text-white font-semibold text-lg px-10 py-3 rounded-xl shadow-md transition"
+        >
           SEARCH
         </button>
       </div>

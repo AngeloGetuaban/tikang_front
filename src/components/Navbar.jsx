@@ -32,7 +32,9 @@ export default function NavBar() {
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-[#D4EDDA] shadow-md">
         {/* Logo */}
         <div className="flex items-center gap-2">
+        <Link to="/">
           <img src={logo} alt="Tikang Logo" className="h-10 w-auto object-contain" />
+        </Link>
         </div>
 
         {/* Search Bar (Desktop Only ≥640px) */}
