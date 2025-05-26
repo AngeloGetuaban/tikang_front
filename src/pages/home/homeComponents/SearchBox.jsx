@@ -88,7 +88,7 @@ const SearchBox = () => {
           className="flex-1 border border-gray-300 rounded-lg px-4 py-3 bg-white cursor-pointer"
         >
           <div className="text-sm text-gray-700 font-medium">
-            {checkIn.toDateString()}
+            {checkIn ? checkIn.toDateString() : "Select Check-in"}
           </div>
           <div className="text-xs text-gray-500">
             {stayType === "dayuse" ? "Same day checkout" : "Check-in"}
@@ -101,7 +101,7 @@ const SearchBox = () => {
             className="flex-1 border border-gray-300 rounded-lg px-4 py-3 bg-white cursor-pointer"
           >
             <div className="text-sm text-gray-700 font-medium">
-              {checkOut.toDateString()}
+              {checkOut ? checkOut.toDateString() : "Select Check-out"}
             </div>
             <div className="text-xs text-gray-500">Check-out</div>
           </div>

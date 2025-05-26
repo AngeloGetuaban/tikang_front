@@ -45,6 +45,33 @@ export const AuthProvider = ({ children }) => {
     validateToken();
   }, []);
 
+  const fetchUser = async () => {
+    const token = localStorage.getItem('tikangToken');
+    if (!token) return null;
+  
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL_GUEST}/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      if (!res.ok) throw new Error('Invalid token');
+  
+      // Backend confirms token is valid — now decode and set
+      const decoded = jwtDecode(token);
+      if (!decoded || !decoded.email || !decoded.userId) {
+        throw new Error('Decoded token missing required fields');
+      }
+  
+      setUser(decoded);
+      return decoded;
+    } catch (err) {
+      console.error('fetchUser error:', err);
+      localStorage.removeItem('tikangToken');
+      setUser(null);
+      return null;
+    }
+  };
+
   const login = (token) => {
     try {
       const decoded = jwtDecode(token);
@@ -80,7 +107,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, setUser }}>
+    <AuthContext.Provider value={{ user, login, logout, setUser, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

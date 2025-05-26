@@ -2,6 +2,7 @@ import React from 'react';
 import './Owner.css';
 import Footer from '../../components/Footer';
 import { Link } from 'react-router-dom';
+import Bg from '../../assets/lessor-signin-bg.gif';
 
 function Owner() {
   return (
@@ -14,18 +15,18 @@ function Owner() {
             alt="Tikang Logo"
             className="h-10 w-auto bg-white p-1 rounded"
           />
-        <Link to="/owner-login">
-          <button className="text-sm text-blue-600 border border-blue-600 px-4 py-1.5 rounded-full hover:bg-blue-50">
+        <a
+            href="http://localhost:3000/login"
+            className="text-sm text-blue-600 border border-blue-600 px-4 py-1.5 rounded-full hover:bg-blue-50">
             Sign in
-          </button>
-        </Link>
+          </a>
         </div>
       </header>
 
       {/* HERO with background */}
       <section
         className="relative h-[90vh] bg-cover bg-center bg-no-repeat flex flex-col"
-        style={{ backgroundImage: "url('/assets/owner-signin-bg.gif')" }}
+        style={{ backgroundImage: `url(${Bg})` }}
       >
         {/* Overlay and content */}
         <div className="absolute inset-0 bg-black/40" />
@@ -40,9 +41,12 @@ function Owner() {
             <li>✅ Reach 9M+ travelers nationwide</li>
             <li>✅ Get your first booking within a week</li>
           </ul>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition">
+          <a
+            href="http://localhost:3000/login"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition inline-block"
+          >
             List your property
-          </button>
+          </a>
         </div>
       </section>
 

@@ -185,9 +185,9 @@ const SearchResults = () => {
                   {prop.availableRooms.map((room, r) => (
                     <div key={r} className="border-t px-4 py-5 flex flex-col md:flex-row gap-4 bg-gray-50">
                       <div className="md:w-1/4 w-full">
-                        {room.room_images ? (
+                      {room.room_images && room.room_images.length > 0 ? (
                           <img
-                            src={room.room_images}
+                            src={`${process.env.REACT_APP_API_URL}${room.room_images[0]}`} // Ensure it's the full URL
                             alt={room.room_name}
                             className="w-full h-40 object-cover rounded-lg border"
                           />
@@ -203,7 +203,9 @@ const SearchResults = () => {
                             <div>
                               <h4 className="text-lg font-semibold text-gray-800">{room.room_name}</h4>
                               <p className="text-sm text-gray-600">{room.room_type}</p>
-                              <p className="text-xs text-gray-500 mt-1 mb-2">{room.description}</p>
+                              <p className="text-xs text-gray-500 mt-1 mb-2 break-words whitespace-normal">
+                                {room.description}
+                              </p>
                               <p className="text-xs text-gray-500 flex items-center gap-1">
                                 <FaUsers className="inline-block text-gray-400" /> Max Guests: {room.max_guests}
                               </p>
